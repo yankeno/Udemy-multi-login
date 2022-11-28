@@ -19,8 +19,8 @@ class LifeCycleTestController extends Controller
         // $sample->run();
 
         // サービスコンテナ app() ありのパターン
-        app()->bind('sample', Sample::class);
-        $sample = app()->make('sample');
+        app()->bind('sample', Sample::class); // sample という名前でクラスをバインド
+        $sample = app()->make('sample'); // make で sample を指定して値を取り出す -> 今回は Sample クラス
         $sample->run();
 
         dd($test, app());
