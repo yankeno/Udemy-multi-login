@@ -46,3 +46,14 @@ class Message
 - クラスの生成を集約できる
 - クラスの構造を隠蔽できる  
   -> モックを使ったテストがしやすくなる
+
+## サービスプロバイダ
+
+- atrisan コマンドでサービスプロバイダの作成
+
+```
+$ php artisan make:provider SampleServiceProvider
+```
+
+- config/app.php の `providers` 配列にサービスプロバイダの登録
+- コントローラ内で `make` 等を使用してサービスプロバイダの呼び出し
