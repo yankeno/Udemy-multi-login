@@ -50,7 +50,7 @@ class LoginRequest extends FormRequest
         } else if ($this->routeIs('admin.*')) {
             $guard = 'admin';
         } else {
-            $guard = 'user';
+            $guard = 'users';
         }
 
         if (!Auth::guard($guard)->attempt($this->only('email', 'password'), $this->boolean('remember'))) {

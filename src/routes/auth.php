@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\User\AuthenticatedSessionController;
-use App\Http\Controllers\User\ConfirmablePasswordController;
-use App\Http\Controllers\User\EmailVerificationNotificationController;
-use App\Http\Controllers\User\EmailVerificationPromptController;
-use App\Http\Controllers\User\NewPasswordController;
-use App\Http\Controllers\User\PasswordResetLinkController;
-use App\Http\Controllers\User\RegisteredUserController;
-use App\Http\Controllers\User\VerifyEmailController;
+use App\Http\Controllers\User\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\User\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\User\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\User\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\User\Auth\NewPasswordController;
+use App\Http\Controllers\User\Auth\PasswordResetLinkController;
+use App\Http\Controllers\User\Auth\RegisteredUserController;
+use App\Http\Controllers\User\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
