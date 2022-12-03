@@ -22,16 +22,22 @@ use App\Http\Controllers\Admin\OwnersController;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.welcome');
-});
+// Route::get('/', function () {
+//     return view('admin.welcome');
+// });
 
 /**
  * リソースコントローラを作成することで CRUD のルートをまとめて登録できる
  * php artisan make:controller SampleController --resource
+ * 必要ないルートは except メソッドで指定する
  */
 Route::resource('owners', OwnersController::class)
-    ->middleware('auth:admin');
+    ->middleware('auth:admin')->except(['show']);
+
+Route::prefix('expired-owners')->middleware('auth:admin')->group(function () {
+    Route::get('index', [OwnersController::class, 'expiredOwnerIndex'])->name('expired-owners.index');
+    Route::post('destroy/{owner}', [OwnersController::class, 'expiredOwnerDestroy'])->name('expired-owners.destroy');
+});
 
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
