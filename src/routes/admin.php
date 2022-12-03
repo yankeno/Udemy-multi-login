@@ -26,6 +26,10 @@ Route::get('/', function () {
     return view('admin.welcome');
 });
 
+/**
+ * リソースコントローラを作成することで CRUD のルートをまとめて登録できる
+ * php artisan make:controller SampleController --resource
+ */
 Route::resource('owners', OwnersController::class)
     ->middleware('auth:admin');
 
