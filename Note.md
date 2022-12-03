@@ -57,3 +57,32 @@ $ php artisan make:provider SampleServiceProvider
 
 - config/app.php の `providers` 配列にサービスプロバイダの登録
 - コントローラ内で `make` 等を使用してサービスプロバイダの呼び出し
+
+## 例外 + ログ
+
+- PHP7 以降は Throwable で例外取得をする
+- 以下のどちらかの方法で使用する
+  - `use Throwable;` を記載する
+  - `\Throwable` と指定する
+
+## トランザクション
+
+- `DB::transaction` を使用すると例外発生時のロールバック、処理完了時のコミットを自動で行うため、手動でトランザクション処理を記載する必要はない
+- `DB::transaction` の第 2 引数に指定した数値の回数分、トランザクションの再試行が行われる
+
+```php
+DB::transaction(function () use ($request) {
+    $owner = Owner::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+    Shop::create([
+        'owner_id' => $owner->id,
+        'name' => '店名を入力してください',
+        'information' => '',
+        'filename' => '',
+        'is_sailing' => true,
+    ]);
+}, 2); // 2回再試行する
+```
