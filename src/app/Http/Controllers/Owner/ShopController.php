@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Models\Shop;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use InterventionImage;
+use App\Services\ImageService;
+use App\Http\Requests\UploadImageRequest;
 
 class ShopController extends Controller
 {
@@ -41,17 +40,31 @@ class ShopController extends Controller
         return view('owner.shops.edit', compact('shop'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UploadImageRequest $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:50',
+            'information' => 'required|string|max:1000',
+            'is_selling' => 'required',
+        ]);
+
+        $shop = Shop::findOrFail($id);
+
         $imageFile = $request->image;
         if (!is_null($imageFile) && $imageFile->isValid()) {
-            $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode();
-            $fileName = uniqid(rand() . '_');
-            $extension = $imageFile->extension();
-            $fileNameToStore = $fileName . '.' . $extension;
-            Storage::put('public/shops/' . $fileNameToStore, $resizedImage);
-            // Storage::putFile('public/shops', $imageFile);
+            $fileNameToStore = ImageService::upload($imageFile, 'shops');
+            $shop->filename = $fileNameToStore;
         }
-        return redirect()->route('owner.shops.index');
+
+        $shop->name = $request->name;
+        $shop->information = $request->information;
+        $shop->is_selling = $request->is_selling;
+        $shop->save();
+
+        return redirect()->route('owner.shops.index')->with([
+            'message' => '店舗情報を登録しました。',
+            'status' => 'info',
+
+        ]);
     }
 }
