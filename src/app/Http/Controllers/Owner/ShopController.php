@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Services\ImageService;
 use App\Http\Requests\UploadImageRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ShopController extends Controller
 {
@@ -28,7 +30,7 @@ class ShopController extends Controller
         });
     }
 
-    public function index()
+    public function index(): View
     {
         $shops = Shop::where('owner_id', Auth::id())->get();
         return view('owner.shops.index', compact('shops'));
@@ -40,7 +42,7 @@ class ShopController extends Controller
         return view('owner.shops.edit', compact('shop'));
     }
 
-    public function update(UploadImageRequest $request, $id)
+    public function update(UploadImageRequest $request, int $id): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string|max:50',

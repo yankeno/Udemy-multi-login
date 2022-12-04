@@ -9,8 +9,10 @@ use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Shop;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\View\View;
 use Throwable;
 
 class OwnersController extends Controller
@@ -61,7 +63,7 @@ class OwnersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
@@ -113,7 +115,7 @@ class OwnersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
         $owner = Owner::findOrFail($id);
         return view('admin.owners.edit', compact('owner'));
@@ -126,7 +128,7 @@ class OwnersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $id): RedirectResponse
     {
         $owner = Owner::findOrFail($id);
         $owner->name = $request->name;
@@ -147,7 +149,7 @@ class OwnersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(int $id): RedirectResponse
     {
         Owner::findOrFail($id)->delete();
         return redirect()->route('admin.owners.index')
@@ -157,7 +159,7 @@ class OwnersController extends Controller
             ]);
     }
 
-    public function expiredOwnerIndex()
+    public function expiredOwnerIndex(): View
     {
         $expiredOwners = Owner::onlyTrashed()->get();
         return view(
@@ -165,7 +167,7 @@ class OwnersController extends Controller
             compact('expiredOwners')
         );
     }
-    public function expiredOwnerDestroy($id)
+    public function expiredOwnerDestroy(int $id): RedirectResponse
     {
         Owner::onlyTrashed()->findOrFail($id)->forceDelete();
         return redirect()->route('admin.expired-owners.index');

@@ -26,6 +26,7 @@ class UploadImageRequest extends FormRequest
         return [
             'image' => 'image|mimes:jpg,jpeg,png|max:2048',
             'files.*.image' => 'image|mimes:jpg,jpeg,png|max:2048|required',
+            'inputFile' => 'max:2048',
         ];
     }
 
