@@ -7,6 +7,9 @@ COPY --from=composer:2.2 /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update && \
   apt-get -y install --no-install-recommends git unzip libzip-dev libicu-dev libonig-dev && \
+  apt-get install -y libfreetype6-dev libjpeg62-turbo-dev libpng-dev && \
+  docker-php-ext-configure gd --with-freetype --with-jpeg && \
+  docker-php-ext-install -j$(nproc) gd && \
   apt-get -y install vim && \
   pecl install xdebug && \
   docker-php-ext-enable xdebug && \
