@@ -22,9 +22,9 @@ use App\Http\Controllers\Admin\OwnersController;
 |
 */
 
-// Route::get('/', function () {
-//     return view('admin.welcome');
-// });
+Route::get('/', function () {
+    return view('admin.welcome');
+});
 
 /**
  * リソースコントローラを作成することで CRUD のルートをまとめて登録できる
@@ -67,26 +67,23 @@ Route::middleware('guest')->group(function () {
         ->name('password.update');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware('auth:admin')->group(function () {
     Route::get('verify-email', [EmailVerificationPromptController::class, '__invoke'])
-        ->middleware('auth:admin')
         ->name('verification.notice');
 
     Route::get('verify-email/{id}/{hash}', [VerifyEmailController::class, '__invoke'])
-        ->middleware(['auth:admin', 'signed', 'throttle:6,1'])
+        ->middleware(['signed', 'throttle:6,1'])
         ->name('verification.verify');
 
     Route::post('email/verification-notification', [EmailVerificationNotificationController::class, 'store'])
-        ->middleware(['auth:admin', 'throttle:6,1'])
+        ->middleware(['throttle:6,1'])
         ->name('verification.send');
 
     Route::get('confirm-password', [ConfirmablePasswordController::class, 'show'])
-        ->middleware('auth:admin')
         ->name('password.confirm');
 
     Route::post('confirm-password', [ConfirmablePasswordController::class, 'store']);
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
-        ->middleware('auth:admin')
         ->name('logout');
 });

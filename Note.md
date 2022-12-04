@@ -82,7 +82,23 @@ DB::transaction(function () use ($request) {
         'name' => '店名を入力してください',
         'information' => '',
         'filename' => '',
-        'is_sailing' => true,
+        'is_selling' => true,
     ]);
 }, 2); // 2回再試行する
+```
+
+## ファイルアップロード
+
+- `Storage::putFile` メソッドでファイル名を自動的に割り当てることが可能
+- `$request->file('photo')->isValid()` で正常にアップロードされていることをバリデーションできる
+
+```php
+public function update(Request $request, $id)
+{
+    $imageFile = $request->image;
+    if (!is_null($imageFile) && $imageFile->isValid()) {
+        Storage::putFile('public/shops', $imageFile);
+    }
+    return redirect()->route('owner.shops.index');
+}
 ```

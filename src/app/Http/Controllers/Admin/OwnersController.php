@@ -81,7 +81,7 @@ class OwnersController extends Controller
                     'name' => '店名を入力してください',
                     'information' => '',
                     'filename' => '',
-                    'is_sailing' => true,
+                    'is_selling' => true,
                 ]);
             }, 2);
         } catch (Throwable $e) {
