@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Image;
 use App\Services\ImageService;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 class ImageController extends Controller
 {
@@ -34,7 +36,7 @@ class ImageController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(): View
     {
         $images = Image::where('owner_id', Auth::id())
             ->orderBy('updated_at', 'desc')
@@ -79,25 +81,15 @@ class ImageController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($id): View
     {
-        //
+        $image = Image::findOrFail($id);
+        return view('owner.images.edit', compact('image'));
     }
 
     /**
@@ -107,9 +99,21 @@ class ImageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id): RedirectResponse
     {
-        //
+        $request->validate([
+            'title' => 'string|max:50',
+        ]);
+
+        $image = Image::findOrFail($id);
+
+        $image->title = $request->title;
+        $image->save();
+
+        return redirect()->route('owner.images.index')->with([
+            'message' => '画像情報を登録しました。',
+            'status' => 'info',
+        ]);
     }
 
     /**
@@ -118,8 +122,19 @@ class ImageController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
-        //
+        $image = Image::findOrFail($id);
+        $filePath = 'public/products/' . $image->filename;
+        if (Storage::exists($filePath)) {
+            Storage::delete($filePath);
+        }
+        Image::findOrFail($id)->delete();
+
+        return redirect()->route('owner.images.index')
+            ->with([
+                'message' =>  '画像を削除しました。',
+                'status' => 'alert',
+            ]);
     }
 }
