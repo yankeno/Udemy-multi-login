@@ -1,18 +1,13 @@
-# Laravel8 のテンプレート
+## Udemy Laravel 講座
 
-## 各種バージョン
+## インストール方法
 
-- PHP8.1
-- MySQL8.0
-- nginx1.20.2
+## インストール後の実施事項
 
-## 使い方
+像のダミーデータは public/images フォルダ内に sample1.jpg 〜 sample6.jpg として 保存しています。
 
-- リポジトリを `git clone`
-- プロジェクトルートで `make install`
+php artisan storage:link で storage フォルダにリンク後、
 
-## 既知のエラー
+storage/app/public/products フォルダ内に 保存すると表示されます。 (products フォルダがない場合は作成してください。)
 
-- Error response from daemon: unrecognized image ID
-
-`make install` 時に発生する場合あり。もう一度 `make install` を行う。
+ショップの画像も表示する場合は、 storage/app/public/shops フォルダを作成し 画像を保存してください。

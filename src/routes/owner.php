@@ -1,16 +1,17 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Owner\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\Owner\Auth\ConfirmablePasswordController;
-use App\Http\Controllers\Owner\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\Owner\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\Owner\Auth\NewPasswordController;
-use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Owner\Auth\RegisteredUserController;
-use App\Http\Controllers\Owner\Auth\VerifyEmailController;
-use App\Http\Controllers\Owner\ImageController;
 use App\Http\Controllers\Owner\ShopController;
+use App\Http\Controllers\Owner\ImageController;
+use App\Http\Controllers\Owner\ProductController;
+use App\Http\Controllers\Owner\Auth\NewPasswordController;
+use App\Http\Controllers\Owner\Auth\VerifyEmailController;
+use App\Http\Controllers\Owner\Auth\RegisteredUserController;
+use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Owner\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Owner\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Owner\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Owner\Auth\EmailVerificationNotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,9 @@ Route::prefix('shop')->middleware('auth:owners')->group(function () {
 });
 
 Route::resource('images', ImageController::class)
+    ->middleware('auth:owners')->except(['show']);
+
+Route::resource('products', ProductController::class)
     ->middleware('auth:owners')->except(['show']);
 
 Route::get('/dashboard', function () {
