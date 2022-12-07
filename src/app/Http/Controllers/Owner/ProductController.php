@@ -58,4 +58,9 @@ class ProductController extends Controller
 
         return view('owner.products.create', compact('shops', 'images', 'categories'));
     }
+
+    public function store(Request $request)
+    {
+        dd($request);
+    }
 }
