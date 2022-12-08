@@ -10,6 +10,14 @@ class Stock extends Model
     use HasFactory;
 
     protected $table = 't_stocks';
+    protected $fillable = [
+        'id',
+        'product_id',
+        'type',
+        'quantity',
+        'created_at',
+        'updated_at',
+    ];
 
     public function product()
     {

@@ -11,7 +11,7 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <x-flash-message status="{{ session('status') }}" />
                     <div class="flex justify-end mb-4">
-                        <button onclick="location.href='{{ route('owner.images.create') }}'"
+                        <button onclick="location.href='{{ route('owner.products.create') }}'"
                             class="text-white bg-indigo-500 border-0 md:py-2 md:px-8 focus:outline-none hover:bg-indigo-600 rounded text-lg">新規登録する</button>
                     </div>
                     <div class="flex flex-wrap">
@@ -20,7 +20,8 @@
                                 <div class="w-1/4 p-2 md:p-4">
                                     <a href="{{ route('owner.products.edit', ['product' => $product->id]) }}">
                                         <div class="border rounded-md p-2 md:p-4">
-                                            <x-thumbnail :filename="$product->imageFirst->filename" type="products" />
+                                            <x-thumbnail filename="{{ $product->imageFirst->filename ?? '' }}"
+                                                type="products" />
                                             {{-- <div class="text-gray-700">{{ $product->name }}</div> --}}
                                         </div>
                                     </a>
