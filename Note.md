@@ -102,3 +102,10 @@ public function update(Request $request, $id)
     return redirect()->route('owner.shops.index');
 }
 ```
+
+## コントローラのレスポンス ※フロントも Laravel で実装する場合
+
+基本的には以下をレスポンスとして返却する
+
+- GET: view
+- POST: redirect
