@@ -47,7 +47,7 @@ class ProductController extends Controller
         return view('owner.products.index', compact('ownerInfo'));
     }
 
-    public function create()
+    public function create(): View
     {
         $shops = Shop::where('owner_id', Auth::id())
             ->select('id', 'name')
@@ -177,5 +177,16 @@ class ProductController extends Controller
                     'status' => 'info'
                 ]);
         }
+    }
+
+    public function destroy($id): RedirectResponse
+    {
+        Product::findOrFail($id)->delete();
+
+        return redirect()->route('owner.products.index')
+            ->with([
+                'message' =>  '商品を削除しました。',
+                'status' => 'alert',
+            ]);
     }
 }

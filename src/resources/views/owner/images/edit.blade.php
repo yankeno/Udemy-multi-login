@@ -22,7 +22,7 @@
                         </div>
                         <div class="p-2 w-1/2 mx-auto">
                             <div class="w-32">
-                                <x- :filename="$image->filename" type="products" />
+                                <x-thumbnail :filename="$image->filename" type="products" />
                             </div>
                         </div>
                         <div class="p-2 w-full flex justify-around mt-4">
