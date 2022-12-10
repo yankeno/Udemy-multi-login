@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Carbon\Carbon;
 use App\Models\Owner;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules;
