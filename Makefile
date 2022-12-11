@@ -34,6 +34,7 @@ test:
 	docker compose exec app php artisan test --env=testing
 copy:
 	cp src/public/images/sample* src/storage/app/public/products
+	cp src/public/images/sample* src/storage/app/public/shops
 ide-helper:
 	docker compose exec app php artisan ide-helper:generate
 	docker compose exec app php artisan ide-helper:models -N
