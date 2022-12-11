@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
+use App\Models\Stock;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class CartController extends Controller
         foreach ($products as $product) {
             $totalPrice += $product->price * $product->pivot->quantity;
         }
-        return view('user.cart.index', compact('products', 'totalPrice'));
+        return view('user.cart', compact('products', 'totalPrice'));
     }
 
     public function add(Request $request): RedirectResponse
@@ -49,5 +50,51 @@ class CartController extends Controller
             ->delete();
 
         return redirect()->route('user.cart.index');
+    }
+
+    public function checkout(): View
+    {
+        $user = User::findOrFail(Auth::id());
+        $products = $user->products;
+
+        $lineItems = [];
+        foreach ($products as $product) {
+            $quatntity = Stock::where('product_id', $product->id)->sum('quantity');
+            if ($product->pivot->quantity > $quatntity) {
+                return redirect()->route('user.cart.index')->with('product');
+            } else {
+                $lineItem = [
+                    'price_data' => [
+                        'currency' => 'jpy',
+                        'product_data' => [
+                            'name' => $product->name,
+                            'description' => $product->information,
+                        ],
+                        'unit_amount' => $product->price,
+                    ],
+                    'quantity' => $product->pivot->quantity,
+                ];
+                array_push($lineItems, $lineItem);
+            }
+        }
+        foreach ($products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type' => \Constant::PRODUCT_LIST['reduce'],
+                'quantity' => $product->pivot->quantity * -1,
+            ]);
+        }
+
+        \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        $session = \Stripe\Checkout\Session::create([
+            'line_items' => [$lineItems],
+            'mode' => 'payment',
+            'success_url' => route('user.items.index'),
+            'cancel_url' => route('user.cart.index'),
+        ]);
+
+        $publicKey = env('STRIPE_PUBLIC_KEY');
+
+        return view('user.checkout', compact('session', 'publicKey'));
     }
 }
