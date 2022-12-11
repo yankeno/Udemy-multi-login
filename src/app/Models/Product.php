@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Shop;
+use App\Models\User;
 use App\Models\Image;
 use App\Models\Stock;
 use App\Models\SecondaryCategory;
@@ -62,5 +63,11 @@ class Product extends Model
     public function stock()
     {
         return $this->hasMany(Stock::class);
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'carts')
+            ->withPivot(['id', 'quantity']);
     }
 }
