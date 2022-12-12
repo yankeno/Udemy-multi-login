@@ -7,6 +7,9 @@ install:
 	docker compose exec app php artisan key:generate
 	docker compose exec app php artisan storage:link
 	docker compose exec app chmod -R 777 storage bootstrap/cache
+	cd src &&  npm install &&  cd ..
+	@make ide-helper
+	@make copy
 	@make fresh
 clean:
 	docker compose down --rmi all --volumes --remove-orphans
@@ -33,6 +36,8 @@ test:
 	docker compose exec app php artisan cache:clear
 	docker compose exec app php artisan test --env=testing
 copy:
+	mkdir -p src/storage/app/public/products
+	mkdir -p src/storage/app/public/shops
 	cp src/public/images/sample* src/storage/app/public/products
 	cp src/public/images/sample* src/storage/app/public/shops
 ide-helper:

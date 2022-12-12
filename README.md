@@ -2,12 +2,16 @@
 
 ## インストール方法
 
-## インストール後の実施事項
+プロジェクトルートで以下のコマンドを実行
 
-像のダミーデータは public/images フォルダ内に sample1.jpg 〜 sample6.jpg として 保存しています。
+```
+$ make install
+```
 
-php artisan storage:link で storage フォルダにリンク後、
+IDE ヘルパーを使用する場合
 
-storage/app/public/products フォルダ内に 保存すると表示されます。 (products フォルダがない場合は作成してください。)
+モデルを追加後、プロジェクトルートで以下のコマンドを実行
 
-ショップの画像も表示する場合は、 storage/app/public/shops フォルダを作成し 画像を保存してください。
+```
+$ make ide-helper
+```
