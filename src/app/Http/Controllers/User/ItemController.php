@@ -2,23 +2,35 @@
 
 namespace App\Http\Controllers\User;
 
+use Illuminate\View\View;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use App\Models\Stock;
 use App\Models\Product;
-use Illuminate\View\View;
-use App\Services\ItemService;
-use App\Http\Controllers\Controller;
 
 class ItemController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth:users');
+
+        $this->middleware(function ($request, $next) {
+            $id = $request->route()->parameter('item');
+            $isShowable = Product::availableItems()->where('product_id', $id)->exists();
+            if (!is_null($id)) {
+                if (!$isShowable) {
+                    abort(404);
+                }
+            }
+            return $next($request);
+        });
     }
 
-    public function index(ItemService $itemService): View
+    public function index(Request $request): View
     {
-        $stocks = $itemService->loadItemStocksBuilder();
-        $products = $itemService->fetchPurchasableProducts($stocks);
+        $products = Product::availableItems()
+            ->sortOrder($request->sort)
+            ->paginate((int) $request->pagination ?? 20);
         return view('user.index', compact('products'));
     }
 
