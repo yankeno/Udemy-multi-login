@@ -5,8 +5,11 @@ namespace App\Http\Controllers\User;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\TestMail;
+use App\Models\PrimaryCategory;
 use App\Models\Stock;
 use App\Models\Product;
+use Illuminate\Support\Facades\Mail;
 
 class ItemController extends Controller
 {
@@ -29,9 +32,13 @@ class ItemController extends Controller
     public function index(Request $request): View
     {
         $products = Product::availableItems()
+            ->selectCategory($request->category ?? 0)
             ->sortOrder($request->sort)
+            ->searchKeyword($request->keyword)
             ->paginate((int) $request->pagination ?? 20);
-        return view('user.index', compact('products'));
+        Mail::to('test@test.com')->send(new TestMail());
+        $categories = PrimaryCategory::with('secondary')->get();
+        return view('user.index', compact('products', 'categories'));
     }
 
     public function show($id): View
