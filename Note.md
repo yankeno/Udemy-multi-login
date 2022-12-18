@@ -109,3 +109,47 @@ public function update(Request $request, $id)
 
 - GET: view
 - POST: redirect
+
+## メール送信処理は非常に重い
+
+非同期処理で送信する方がユーザにとって使いやすい
+
+```php
+/**
+ * php artisan make:queue でキューを作成しておき、非同期に処理を行う
+ */
+
+
+class SendThanksMail implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     *
+     * @return void
+     */
+    public function handle()
+    {
+        Mail::to('test@test.com')->send(new TestMail());
+    }
+}
+```
+
+```php
+/**
+ * 発火(キューへの追加)は dispatch メソッドを使用する
+ * php artisan queue:work でキューに溜まったジョブを実行する
+ */
+    SendThanksMail::dispatch();
+```
